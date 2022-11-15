@@ -1,0 +1,50 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Nanum Gothic', sans-serif; background-color: #FEF2F2; display: flex; }
+
+#liveChat { position: fixed; top: 25px; right: 20px; height: 300px; width: 350px; background-color: white;}
+#toggleChat { position: fixed; top: 25px; right: 20px; z-index: 10; display: block; border: 1px solid black; height: 30px; width: 30px; background-color: white;}
+#toggleChat:hover { cursor: pointer; }
+#toggleButton { text-align: center; margin-top: 5px; }
+#unreadMessages { display:none; color: red; transform: scale(-1); position: absolute; top: 20px; right: 20px;}
+
+.chatForm { background: #000; padding: 3px; position: absolute; bottom: 0; width: 100%; }
+.chatForm input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+#messages { list-style-type: none; margin: 0; padding: 0; padding-bottom: 41px; overflow-y: auto; height: 300px;}
+#messages li { padding: 5px 10px; }
+
+#playerId { position: fixed; top: 10px; right: 20px; width: auto; height: 50px;}
+#playerId p { color: black; margin: auto; font-size: 10px; }
+td { border: 1px solid black; width: 30px; height: 30px;}
+
+#gameMenu { display: block; margin: auto; margin-top: 200px; }
+#gameMenu h1 { font-weight: lighter; text-align: center; }
+
+#gameMenuStep1 { display: block; }
+
+#joinGame, #globalLobby, #hostLobbyContainer { display: none; }
+#gameMenuStep2 .gameSettingsContainer button { width: 200px; height: 50px; justify-content: center; }
+#gameMenu #gameSettings { display: none; border-left: 1px solid black;}
+@media screen and (max-width: 640px) {
+    #gameMenu #gameSettings { display: none; border-top: 1px solid black; border-left: unset;}
+}
+
+#gameMenu #gameHosting { display: none; border-left: 1px solid black;}
+@media screen and (max-width: 640px) {
+    #gameMenu #gameHosting { display: none; border-top: 1px solid black; border-left: unset;}
+}
+
+#gameMenu #lobbyContainer { display: none; border-left: 1px solid black;}
+@media screen and (max-width: 640px) {
+    #gameMenu #lobbyContainer { display: none; border-top: 1px solid black; border-left: unset;}
+}
+
+#game01:hover, #game02:hover { cursor: pointer; }
+
+
+#gameView { display: none; margin: auto; }
+#toolbar { text-align: center; margin-top: 20px; }
+#toolbar button { width: 80px; height: 50px; margin: 10px; }
+#inGameMenu { position: absolute; top: 150px; margin-left: 210px; }
+#inGameMenu:hover { cursor: pointer; background-color: white;}
+#grid { margin: 200px auto auto auto; }
+.top { display: flex; flex-direction: row; justify-content: center; }

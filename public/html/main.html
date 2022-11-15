@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Socket.IO chat</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../style/style.css"></link>
+  </head>
+
+  <body>
+    <div id="gameMenu">
+      <div id="gameMenuStep1" class="flex-column justify-content-center align-items-center">
+        <h1>WELCOME TO THE ARIKAGAME</h1>
+        <form class="playerNameForm d-flex mt-3 flex-column justify-content-center align-items-center" action="">
+          <label class="d-flex mt-3" for="playerName">Enter a username</label>
+          <input class="d-flex" id="playerName" autocomplete="off" />
+          <button class="btn btn-outline-dark mt-3" type="submit">SUBMIT</button>
+        </form>
+      </div>
+
+      <div id="gameMenuStep2Container" class="d-flex flex-column flex-md-row justify-content-center align-items-center">
+        <div id="gameMenuStep2" class="flex-column justify-content-center align-items-center">
+          <h1>WELCOME <p id="username"></p></h1>
+          <div class="gameSettingsContainer d-flex mt-3 flex-column justify-content-center align-items-center">
+            <button class="d-flex btn btn-outline-dark mt-3" id="gameSettingsBtn">GAME SETTINGS</button>
+            <button class="d-flex btn btn-outline-dark mt-3" id="hostGame">HOST GAME</button>
+            <button class="btn btn-outline-dark mt-3" id="joinGame">JOIN GAME</button>
+             <button class="d-flex btn btn-outline-dark mt-3" id="createGame">CREATE GAME</button> 
+          </div>
+        </div>
+  
+        <div id="gameSettings" class="mt-5 mt-md-0 pt-5 pt-md-0 ml-md-5 pl-md-5">
+          <form class="gameSettingsForm d-flex mt-3 flex-column justify-content-center align-items-center" action="">
+            <label class="d-flex mt-3" for="selectNbPlayers">Select a number of player</label>
+            <select class="d-flex w-100 form-control form-control-lg" id="selectNbPlayers">
+              <option value="2">2</option>
+              <option value="4" selected>4</option>
+            </select>
+
+            <label class="d-flex mt-3" for="selectGridLength">Set grid length</label>
+            <select class="d-flex w-100 form-control form-control-lg" id="selectGridLength">
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="7">7</option>
+            </select>
+
+            <button class="btn btn-outline-dark mt-3" type="submit">SAVE</button>
+          </form>
+        </div>
+
+        <div id="gameHosting" class="mt-5 mt-md-0 pt-5 pt-md-0 ml-md-5 pl-md-5">
+          <p class="text-align-center">YOU ARE HOSTING A GAME</p>
+          <p>PLEASE SELECT WHICH KIND OF GAME YOU WANT TO LAUNCH</p>
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div id="game01" class="d-flex flex-column align-items-center">
+              <img src="../assets/game01.png" />
+              <p>TWO HUMANS</p>
+            </div>
+            <div id="game02" class="d-flex flex-column align-items-center">
+              <img src="../assets/game02.png" />
+              <p>4 HUMANS</p>
+            </div>
+          </div>
+          <button id="gameSelectedBtn" class="btn btn-outline-dark mt-3" >VALID</button>
+        </div>
+
+        <div id="lobbyContainer" class="mt-5 mt-md-0 pt-5 pt-md-0 ml-md-5 pl-md-5">
+          <div id="globalLobby">
+            <p>SELECT A GAME</p>
+          </div>
+          <div id="hostLobbyContainer" class="flex-column flex-md-row">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="gameView">
+      <div id="inGameMenu">X QUIT GAME</div>
+      <h2 id="message"></h2>
+      <!-- GRID GAME -->
+      <table id="grid"></table>
+  
+      <!-- TOOLBAR GAME'S ACTION -->
+      <div id="toolbar">
+        <div class="top">
+          <button id="haut" onclick="emitAction('haut');">HAUT</button>
+        </div>
+        <button id="gauche" onclick="emitAction('gauche');">GAUCHE</button>
+        <button id="bas" onclick="emitAction('bas');">BAS</button>
+        <button id="droite" onclick="emitAction('droite');">DROITE</button>
+        <div class="top">
+          <button id="firetop" onclick="emitAction('firetop');">FEU HAUT</button>
+        </div>
+        <button id="fireleft" onclick="emitAction('fireleft');">FEU GAUCHE</button>
+        <button id="firebottom" onclick="emitAction('firebottom');">FEU BAS</button>
+        <button id="fireright" onclick="emitAction('fireright');">FEU DROITE</button>
+      </div>
+    </div>
+
+    <!-- CHAT BOX -->
+    <div id="playerId">
+      <p class="currentSession"></p>
+    </div>
+    <div id="toggleChat">
+      <p id="toggleButton"></p>
+      <i id="unreadMessages" class="material-icons">chat</i>
+    </div>
+    <div id="liveChat">
+      <ul id="messages"></ul>
+      <form class="chatForm" action="">
+        <input id="m" autocomplete="off" />
+      </form>
+    </div>
+    <!-- END CHAT BOX -->
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../scripts/main.js"></script>
+    <script type="text/javascript" src="../scripts/gameController.js"></script>
+
+  </body>
+</html>
