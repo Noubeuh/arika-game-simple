@@ -40,18 +40,23 @@ let toolb;
 let promise, limitebas, maxlength, isAnotherPlayer;
 let center = Math.round((gridLength*gridLength)/2);
 
+let currentplayercolor = [];
+
 socket.on('update game settings', (gameSettings) => {
     gridLength = parseInt(gameSettings.gridLength);
     center = Math.round((gridLength*gridLength)/2);
     nbp = gameSettings.nbPlayers;
 });
 
-socket.on('start game', function() {
+socket.on('start game', function(currentSessionColor) {
+    console.log('currentSessionColor => ', currentSessionColor);
+    currentplayercolor.push(currentSessionColor);
     isWinner = false;
     storedactions=[];
     currplayerindex=0;
     playerTurn=[];
     counter=0;
+    turncounter = 0;
     gameSettings();
 });
 
@@ -61,36 +66,16 @@ socket.on('user has quit game', function(){
     currplayerindex=0;
     playerTurn=[];
     counter=0;
+    turncounter = 0;
+    currentplayercolor = [];
     gameSettings();
-    p = [
-        {
-            initpos:gridLength*gridLength,
-            currpos:gridLength*gridLength,
-            lastpos:gridLength*gridLength,
-            color:'blue'
-        },
-        {
-            initpos:21,
-            currpos:21,
-            lastpos:21,
-            color:'purple'
-        },
-        {
-            initpos:1,
-            currpos:1,
-            lastpos:1,
-            color:'red'
-        },
-        {
-            initpos:5,
-            currpos:5,
-            lastpos:5,
-            color:'pink'
-        }
-    ];
 });
 
 function emitAction(action) {
+    // console.log('should be player => ', p[turncounter].color);
+    // console.log('but this player clicked => ', currentplayercolor);
+    // if(p[turncounter].color == currentplayercolor) {
+    //     }
     socket.emit('emit action player', action);
 }
 
@@ -103,6 +88,7 @@ function gameSettings() {
     $('#toolbar').css('display', 'block');
     initgrid();
     createTreasure();
+    console.log('nbp => ', nbp);
     initPlayers(nbp);
     toolb = document.getElementById('toolbar');
     toolb.style.background=p[turncounter].color;

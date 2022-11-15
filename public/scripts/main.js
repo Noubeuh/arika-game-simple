@@ -4,6 +4,7 @@ $(function () {
     var displayChat = false;
     var currentSessionId = '';
     var currentSessionName = '';
+    var currentSessionColor = '';
     var steps = 1;
     var hostGame = false;
     var sessionLobbies;
@@ -29,14 +30,17 @@ $(function () {
       return false;
     });
 
-    socket.on('update player name', function(playerName, sessionId){
+    socket.on('update player name', function(players, sessionId){
+      let player = players.find(p => p.id === currentSessionId);
+      console.log('player after update => ', player);
         if(currentSessionId == sessionId) {
-          currentSessionName = playerName;
+          currentSessionName = player.name;
+          currentSessionColor = player.color;
           steps = 2;
           manageGameViews();
   
           $('.currentSession').text('Current session ' + currentSessionName);
-          $('#username').text(currentSessionName)
+          $('#username').text(currentSessionName);
         }
     });
 
@@ -59,7 +63,7 @@ $(function () {
     $('#createGame').on('click', function() {
       steps = 3;
       manageGameViews();
-      socket.emit('init game');
+      socket.emit('init game', currentSessionColor);
     });
 
     $('#hostGame').on('click', function() {
@@ -131,7 +135,7 @@ $(function () {
 
     $('#gameSelectedBtn').on('click', function(e) {
       e.preventDefault();
-      socket.emit('selected game', gameSelected, currentSessionId, currentSessionName);
+      socket.emit('selected game', gameSelected, currentSessionId, currentSessionName, currentSessionColor);
     });
 
     // START GAME
@@ -157,6 +161,16 @@ $(function () {
     socket.on('show action bar', function(){
       $('#toolbar').css('display', 'block');
     });
+
+    // TODO manage turn counter action
+    // socket.on('action to emit', function(action){
+
+    // });
+
+    // function emitAction(action) {
+    //   socket.emit('action to emit', action);
+    // }
+
     /********** END STEP 2 : GAME SETTINGS **********/
 
     /********** CHAT **********/

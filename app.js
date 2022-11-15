@@ -46,10 +46,18 @@ io.on('connection', function(socket){
     socket.on('set player name', function(playerName) {
       users.map((user) => {
         if (user.id == socket.client.id) {
-          return user.name = playerName;
+          user.name = playerName;
+          console.log('gameColors => ', gameColors.length);
+          if(users.length <= gameColors.length) {
+            user.color = gameColors[users.length - 1];
+            console.log(gameColors);
+          }
+          console.log('user => ', user);
+          return user;
         }
       });
-      io.emit('update player name', playerName, socket.client.id);
+      console.log('users => ', users);
+      io.emit('update player name', users, socket.client.id);
     });
 
     /********* CHAT *********/
@@ -74,15 +82,16 @@ io.on('connection', function(socket){
       io.emit('update game settings', gameSettings);
     });
 
-    socket.on('init game', function(){
-      io.emit('start game');
+    socket.on('init game', function(playerColor){
+      console.log('playerColor appjs => ', playerColor);
+      io.emit('start game', playerColor);
     });
 
     socket.on('host game', (hostSession) => {
       io.emit('game session hosted', hostSession);
     });
 
-    socket.on('selected game', (gameSelected, hostSessionId, hostSessionName) => {
+    socket.on('selected game', (gameSelected, hostSessionId, hostSessionName, hostSessionColor) => {
       // gameselected 1 => teamplay game / gameselected 2 => 1v1v1v1
       if(gameSelected == 1) {
         lobbies.push(
