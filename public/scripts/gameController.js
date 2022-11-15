@@ -29,13 +29,13 @@ let p = [
     }
 ];
 let nbp=p.length;
-let nballowedactions=2;
+let nballowedactions=3;
 let storedactions=[];
 let playerTurn = [];
 let counter=0;
 let turncounter = 0;
 let currplayerindex = 0;
-let bg='white';
+let bg='#FEF2F2';
 let toolb;
 let promise, limitebas, maxlength, isAnotherPlayer;
 let center = Math.round((gridLength*gridLength)/2);
@@ -56,7 +56,38 @@ socket.on('start game', function() {
 });
 
 socket.on('user has quit game', function(){
-    $('#grid').empty();
+    isWinner = false;
+    storedactions=[];
+    currplayerindex=0;
+    playerTurn=[];
+    counter=0;
+    gameSettings();
+    p = [
+        {
+            initpos:gridLength*gridLength,
+            currpos:gridLength*gridLength,
+            lastpos:gridLength*gridLength,
+            color:'blue'
+        },
+        {
+            initpos:21,
+            currpos:21,
+            lastpos:21,
+            color:'purple'
+        },
+        {
+            initpos:1,
+            currpos:1,
+            lastpos:1,
+            color:'red'
+        },
+        {
+            initpos:5,
+            currpos:5,
+            lastpos:5,
+            color:'pink'
+        }
+    ];
 });
 
 function emitAction(action) {
